@@ -1,28 +1,27 @@
-import React from "react";
-import TaskItem from "../TaskItem/TaskItem.jsx";
+import { useEffect, useState } from "react";
+import TaskForm from "../TaskForm/TaskForm.jsx";
 
-const TaskList = ({ tasks, setTasks, setEditingTask, setShowAddForm }) => {
+export default function TaskList() {
+    const [tasks, setTasks] = useState([]);
+
+    // GET tasks saat load
+    useEffect(() => {
+        fetch("http://localhost:5000/api/tasks")
+        .then((res) => res.json())
+        .then((data) => setTasks(data));
+    }, []);
+
     return (
-        <div className="bg-white p-4 rounded shadow">
-            <h3 className="text-lg font-semibold mb-4">Task List</h3>
-            {tasks.length === 0 ? (
-                <p className="text-gray-500">No tasks found</p>
-            ) : (
-                <div className="space-y-2">
-                    {tasks.map((task) => (
-                        <TaskItem
-                            key={task.id}
-                            task={task}
-                            tasks={tasks}
-                            setTasks={setTasks}
-                            setEditingTask={setEditingTask}
-                            setShowAddForm={setShowAddForm}
-                        />
-                    ))}
-                </div>
-            )}
+        <div>
+        <h1>Daftar Task</h1>
+        <TaskForm onTaskCreated={(task) => setTasks([task, ...tasks])} />
+        <ul>
+            {tasks.map((task) => (
+            <li key={task.id}>
+                <strong>{task.title}</strong> - {task.description}
+            </li>
+            ))}
+        </ul>
         </div>
     );
-};
-
-export default TaskList;
+}

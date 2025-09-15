@@ -1,33 +1,47 @@
 import { useState } from "react";
 
-export default function TaskForm({ onAdd }) {
+export default function TaskForm({ onTaskCreated }) {
     const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!title.trim()) return;
-            onAdd({
-            user_id: 1, // sementara hardcode
-            title,
-            description: "Deskripsi otomatis",
-            status: "todo",
-            due_date: null
+
+        const newTask = {
+        user_id: 1, // contoh hardcode dulu
+        title,
+        description,
+        status: "pending",
+        due_date: "2025-09-20"
+        };
+
+        const res = await fetch("http://localhost:5000/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTask),
         });
+
+        const data = await res.json();
+        onTaskCreated(data); // update state di parent
         setTitle("");
+        setDescription("");
     };
 
     return (
-        <form onSubmit={handleSubmit} className="p-4">
+        <form onSubmit={handleSubmit}>
         <input
             type="text"
-            placeholder="Task baru..."
+            placeholder="Judul task"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="border p-2 mr-2"
         />
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-            Tambah
-        </button>
+        <input
+            type="text"
+            placeholder="Deskripsi"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+        />
+        <button type="submit">Tambah Task</button>
         </form>
     );
 }

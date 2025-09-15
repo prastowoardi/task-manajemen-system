@@ -1,4 +1,4 @@
-import Dashboard from "./components/Dashboard/oldDashboard.jsx";
+import Dashboard from "./components/Dashboard/Dashboard.jsx";
 
 function App() {
     return (

@@ -4,8 +4,6 @@ import {
     User, Tag, Search, Filter, BarChart3, Archive, Star, 
     ChevronDown, ChevronUp, Eye, Copy, Download, RefreshCw
 } from 'lucide-react';
-import sampleTasks from '../data/sampleTasks.js';
-
 
 const TaskTracker = () => {
   // State Management
@@ -40,9 +38,17 @@ const TaskTracker = () => {
         important: false
     });
 
-    // Initial sample data
     useEffect(() => {
-        setTasks(sampleTasks);
+    fetch("http://localhost:5000/api/tasks")
+        .then((res) => res.json())
+        .then((data) => {
+        if (Array.isArray(data)) {
+            setTasks(data);
+        } else if (Array.isArray(data.tasks)) {
+            setTasks(data.tasks);
+        }
+        })
+        .catch((err) => console.error("Error fetching tasks:", err));
     }, []);
 
     // Constants
@@ -592,12 +598,12 @@ const TaskTracker = () => {
                     Judul Task *
                     </label>
                     <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData({...formData, title: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Masukkan judul task..."
-                    required
+                        type="text"
+                        value={formData.title}
+                        onChange={(e) => setFormData({...formData, title: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Masukkan judul task..."
+                        required
                     />
                 </div>
                 
@@ -607,11 +613,11 @@ const TaskTracker = () => {
                     Deskripsi
                     </label>
                     <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    rows="3"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Deskripsi detail task..."
+                        value={formData.description}
+                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                        rows="3"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Deskripsi detail task..."
                     />
                 </div>
 
@@ -621,9 +627,9 @@ const TaskTracker = () => {
                     Prioritas
                     </label>
                     <select
-                    value={formData.priority}
-                    onChange={(e) => setFormData({...formData, priority: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={formData.priority}
+                        onChange={(e) => setFormData({...formData, priority: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                     <option value="low">Rendah</option>
                     <option value="medium">Sedang</option>
@@ -637,9 +643,9 @@ const TaskTracker = () => {
                     Status
                     </label>
                     <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({...formData, status: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={formData.status}
+                        onChange={(e) => setFormData({...formData, status: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
                     <option value="pending">Menunggu</option>
                     <option value="in-progress">Dikerjakan</option>
@@ -653,10 +659,10 @@ const TaskTracker = () => {
                     Tanggal Deadline
                     </label>
                     <input
-                    type="date"
-                    value={formData.dueDate}
-                    onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        type="date"
+                        value={formData.dueDate}
+                        onChange={(e) => setFormData({...formData, dueDate: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                 </div>
 
@@ -666,11 +672,11 @@ const TaskTracker = () => {
                     Penanggung Jawab
                     </label>
                     <input
-                    type="text"
-                    value={formData.assignee}
-                    onChange={(e) => setFormData({...formData, assignee: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Nama penanggung jawab"
+                        type="text"
+                        value={formData.assignee}
+                        onChange={(e) => setFormData({...formData, assignee: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Nama penanggung jawab"
                     />
                 </div>
 
@@ -680,11 +686,11 @@ const TaskTracker = () => {
                     Kategori
                     </label>
                     <input
-                    type="text"
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Misal: Development, Marketing"
+                        type="text"
+                        value={formData.category}
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Misal: Development, Marketing"
                     />
                 </div>
 
@@ -694,12 +700,12 @@ const TaskTracker = () => {
                     Estimasi Jam
                     </label>
                     <input
-                    type="number"
-                    value={formData.estimatedHours}
-                    onChange={(e) => setFormData({...formData, estimatedHours: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Jam kerja"
-                    min="0"
+                        type="number"
+                        value={formData.estimatedHours}
+                        onChange={(e) => setFormData({...formData, estimatedHours: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Jam kerja"
+                        min="0"
                     />
                 </div>
 
@@ -709,11 +715,11 @@ const TaskTracker = () => {
                     Tags
                     </label>
                     <input
-                    type="text"
-                    value={formData.tags}
-                    onChange={(e) => setFormData({...formData, tags: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="tag1,tag2,tag3"
+                        type="text"
+                        value={formData.tags}
+                        onChange={(e) => setFormData({...formData, tags: e.target.value})}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="tag1,tag2,tag3"
                     />
                     <p className="text-xs text-gray-500 mt-1">Pisahkan dengan koma</p>
                 </div>
@@ -724,23 +730,23 @@ const TaskTracker = () => {
                     Progress ({formData.progress}%)
                     </label>
                     <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    value={formData.progress}
-                    onChange={(e) => setFormData({...formData, progress: parseInt(e.target.value)})}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={formData.progress}
+                        onChange={(e) => setFormData({...formData, progress: parseInt(e.target.value)})}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     />
                 </div>
 
                 {/* Important */}
                 <div className="flex items-center gap-2">
                     <input
-                    type="checkbox"
-                    id="important"
-                    checked={formData.important}
-                    onChange={(e) => setFormData({...formData, important: e.target.checked})}
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                        type="checkbox"
+                        id="important"
+                        checked={formData.important}
+                        onChange={(e) => setFormData({...formData, important: e.target.checked})}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <label htmlFor="important" className="text-sm font-medium text-gray-700">
                     Tandai sebagai penting
@@ -753,11 +759,11 @@ const TaskTracker = () => {
                     Catatan
                     </label>
                     <textarea
-                    value={formData.notes}
-                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                    rows="2"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Catatan tambahan..."
+                        value={formData.notes}
+                        onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                        rows="2"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Catatan tambahan..."
                     />
                 </div>
 
